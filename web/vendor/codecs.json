@@ -1,0 +1,53 @@
+[
+  {
+    "name": "utif",
+    "version": "3.1.0",
+    "license": "MIT",
+    "tarball": "https://registry.npmjs.org/utif/-/utif-3.1.0.tgz",
+    "integrity": "sha512-WEo4D/xOvFW53K5f5QTaTbbiORcm2/pCL9P6qmJnup+17eYfKaEhDeX9PeQkuyEoIxlbGklDuGl8xwuXYMrrXQ==",
+    "files": [
+      {
+        "file": "utif.js",
+        "sha256": "e3e76115f49571e39624c3316a76b3c4c5b2c5ca518dfec4b66a9f7af8c6d059"
+      },
+      {
+        "file": "utif.LICENSE",
+        "sha256": "c1fb8861eca211bf5aea574358aba7039396c0c1824c2a1477cc126d398efd89"
+      }
+    ]
+  },
+  {
+    "name": "pako",
+    "version": "1.0.11",
+    "license": "(MIT AND Zlib)",
+    "tarball": "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz",
+    "integrity": "sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==",
+    "files": [
+      {
+        "file": "pako.min.js",
+        "sha256": "29cfa0542b9864b6640cfdcc8f15b184db6431b532db2702a3ce97e5f2a7fc1c"
+      },
+      {
+        "file": "pako.LICENSE",
+        "sha256": "a04665b3b2de56c66730c1f720f528175739e4104f79073614aa611da1e85539"
+      }
+    ]
+  },
+  {
+    "name": "heic2any",
+    "version": "0.0.4",
+    "license": "MIT",
+    "tarball": "https://registry.npmjs.org/heic2any/-/heic2any-0.0.4.tgz",
+    "integrity": "sha512-3lLnZiDELfabVH87htnRolZ2iehX9zwpRyGNz22GKXIu0fznlblf0/ftppXKNqS26dqFSeqfIBhAmAj/uSp0cA==",
+    "files": [
+      {
+        "file": "heic2any.min.js",
+        "sha256": "0963cfa50e9e1e7e6af929a40a81e3e898a673f1270eafa6917dd137e4968164"
+      },
+      {
+        "file": "heic2any.LICENSE.md",
+        "sha256": "17e4c847dac6cf3ba1f6846464160a749e020accf7dd9f412c6c55bc96285009"
+      }
+    ]
+  }
+]

@@ -1,0 +1,40 @@
+name: build-plugin
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Unit tests and DOM contracts
+        run: node --test tests/*.test.mjs tests/verify-ui.mjs scripts/*.test.mjs
+      - name: Check module syntax
+        run: |
+          node --check web/app.js
+          node --check web/bridge.js
+          node --check web/engine.js
+      - name: Build standalone plugin
+        run: node scripts/build-web.mjs
+      - name: Package and verify
+        run: |
+          node scripts/pack-plugin.mjs --out dist-pack
+          node scripts/verify-plugin.mjs dist-pack
+      - uses: actions/upload-artifact@v4
+        with:
+          name: image-tools-plugin
+          path: |
+            dist-pack/*.oplg
+            dist-pack/plugin.json
+            dist-pack/logo.svg
+            dist-pack/SHA256SUMS
+          if-no-files-found: error

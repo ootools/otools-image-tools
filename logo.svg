@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Image Viewer">
+  <defs>
+    <linearGradient id="viewer-bg" x1="8%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#667cf5"/>
+      <stop offset="100%" stop-color="#32b9c7"/>
+    </linearGradient>
+    <linearGradient id="viewer-photo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d9f5ff"/>
+      <stop offset="100%" stop-color="#b8d5ff"/>
+    </linearGradient>
+    <clipPath id="photo-clip">
+      <rect x="27" y="39" width="74" height="58" rx="7"/>
+    </clipPath>
+  </defs>
+  <rect width="128" height="128" rx="29" fill="url(#viewer-bg)"/>
+  <rect x="17" y="17" width="94" height="87" rx="13" fill="#fff" fill-opacity=".98"/>
+  <path d="M17 30a13 13 0 0 1 13-13h68a13 13 0 0 1 13 13v13H17z" fill="#f0f2f8"/>
+  <circle cx="31" cy="30" r="3" fill="#f28d92"/>
+  <circle cx="42" cy="30" r="3" fill="#f2c05e"/>
+  <circle cx="53" cy="30" r="3" fill="#69c79a"/>
+  <rect x="27" y="39" width="74" height="58" rx="7" fill="url(#viewer-photo)"/>
+  <g clip-path="url(#photo-clip)">
+    <circle cx="80" cy="53" r="8" fill="#ffc65d"/>
+    <path d="m20 91 23-25 12 12 12-16 39 37H20z" fill="#66b6a1"/>
+    <path d="m55 88 16-20 33 31H55z" fill="#438da7"/>
+  </g>
+  <circle cx="88" cy="87" r="20" fill="#385bce" stroke="#fff" stroke-width="5"/>
+  <circle cx="88" cy="87" r="12" fill="#fff" fill-opacity=".16" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/>
+  <path d="m102 101 12 12" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+</svg>

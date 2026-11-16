@@ -1,0 +1,25 @@
+{
+  "devUrl": "http://127.0.0.1:6498",
+  "developerName": "OTools",
+  "displayName": "Image Tools",
+  "displayNameCN": "轻图工坊",
+  "entry": "dist/index.html",
+  "quickDev": true,
+  "hasAd": false,
+  "icon": "Image",
+  "inPluginPurchase": false,
+  "key": [
+    "图片",
+    "看图",
+    "裁剪",
+    "压缩",
+    "格式转换",
+    "PDF"
+  ],
+  "openInBrowser": false,
+  "packid": "otools-image-tools",
+  "screenshots": [],
+  "summary": "轻松查看、裁剪、调色、压缩和转换图片，也能批量处理并导出 PDF。",
+  "uuid": "otools-image-tools",
+  "version": "0.1.0"
+}

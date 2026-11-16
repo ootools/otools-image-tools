@@ -1,0 +1,38 @@
+Offline codec components bundled with OTools Image Tools
+
+UTIF 3.1.0
+  Source: https://github.com/photopea/UTIF.js
+  Distribution: https://registry.npmjs.org/utif/-/utif-3.1.0.tgz
+  License: MIT; see utif.LICENSE.
+
+pako 1.0.11
+  Source: https://github.com/nodeca/pako/tree/1.0.11
+  Distribution: https://registry.npmjs.org/pako/-/pako-1.0.11.tgz
+  License: MIT and Zlib; see pako.LICENSE.
+
+heic2any 0.0.4
+  Source: https://github.com/alexcorvi/heic2any
+  Distribution: https://registry.npmjs.org/heic2any/-/heic2any-0.0.4.tgz
+  License of the wrapper: MIT; see heic2any.LICENSE.md.
+  The distributed standalone JavaScript embeds gifshot and a libheif build.
+  gifshot copyright: Yahoo Inc. (MIT); see gifshot.LICENSE.
+  libheif is LGPL-3.0; see libheif.COPYING and GNU-GPL-3.0.
+  HEVC decoding uses libde265 (LGPL-3.0); see libde265.COPYING.
+
+Codec sources and build information:
+  Exact wrapper snapshot used as the source reference:
+    https://github.com/alexcorvi/heic2any/tree/3428539e643e112323a5b8a2c77c6402cb1372f6
+  Embedded JavaScript codec source:
+    https://github.com/alexcorvi/heic2any/blob/3428539e643e112323a5b8a2c77c6402cb1372f6/src/libheif.js
+  Wrapper/worker and bundling sources:
+    https://github.com/alexcorvi/heic2any/tree/3428539e643e112323a5b8a2c77c6402cb1372f6/src
+    https://github.com/alexcorvi/heic2any/tree/3428539e643e112323a5b8a2c77c6402cb1372f6/build
+  Native library sources and browser build support:
+    https://github.com/strukturag/libheif
+    https://github.com/strukturag/libde265
+    https://github.com/catdad-experiments/libheif-js
+
+The codec JavaScript files are distributed unmodified as separately replaceable
+files. No runtime image upload or CDN request is made. Users may replace these
+files with compatible builds and debug modifications to these LGPL components.
+For codec versions/file hashes, see the source repository's codecs.json.

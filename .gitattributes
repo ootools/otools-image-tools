@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.heic binary
+*.oplg binary
+*.ps1 text eol=crlf
+# Preserve third-party files byte-for-byte, including upstream whitespace.
+web/vendor/** -text -whitespace
