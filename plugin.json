@@ -4,10 +4,28 @@
   "displayName": "Image Tools",
   "displayNameCN": "轻图工坊",
   "entry": "dist/index.html",
+  "fileAssociations": [
+    { "ext": "jpg", "desc": "JPEG 图片", "mime": "image/jpeg" },
+    { "ext": "jpeg", "desc": "JPEG 图片", "mime": "image/jpeg" },
+    { "ext": "jfif", "desc": "JPEG 图片", "mime": "image/jpeg" },
+    { "ext": "png", "desc": "PNG 图片", "mime": "image/png" },
+    { "ext": "apng", "desc": "动态 PNG 图片", "mime": "image/png" },
+    { "ext": "webp", "desc": "WebP 图片", "mime": "image/webp" },
+    { "ext": "bmp", "desc": "BMP 位图", "mime": "image/bmp" },
+    { "ext": "gif", "desc": "GIF 图片", "mime": "image/gif" },
+    { "ext": "avif", "desc": "AVIF 图片", "mime": "image/avif" },
+    { "ext": "ico", "desc": "图标文件", "mime": "image/x-icon" },
+    { "ext": "svg", "desc": "SVG 矢量图", "mime": "image/svg+xml" },
+    { "ext": "tif", "desc": "TIFF 图片", "mime": "image/tiff" },
+    { "ext": "tiff", "desc": "TIFF 图片", "mime": "image/tiff" },
+    { "ext": "heic", "desc": "HEIC 图片", "mime": "image/heic" },
+    { "ext": "heif", "desc": "HEIF 图片", "mime": "image/heif" }
+  ],
   "quickDev": true,
   "hasAd": false,
   "icon": "Image",
   "inPluginPurchase": false,
+  "inputTypes": ["image"],
   "key": [
     "图片",
     "看图",
@@ -21,5 +39,5 @@
   "screenshots": [],
   "summary": "轻松查看、裁剪、调色、压缩和转换图片，也能批量处理并导出 PDF。",
   "uuid": "otools-image-tools",
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
