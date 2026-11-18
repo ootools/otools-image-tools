@@ -18,6 +18,8 @@ assert.equal(manifest.openInBrowser, false, 'image input requires non-browser pl
 assert.match(app, /onPanelImage\(/, 'app subscribes to PANEL image input');
 assert.match(bridge, /onOtoolsKeyword\(/, 'bridge listens to host keyword dispatch');
 assert.match(bridge, /PANEL_IMAGE_KEYWORD\s*=\s*'panel-image'/, 'bridge handles panel-image keyword');
+assert.match(bridge, /api\.pickFiles\(/, 'bridge uses injected otools.pickFiles');
+assert.equal(/directory:\s*false/.test(bridge), false, 'no boolean directory option leaks to Rust commands');
 for (const source of ['app.js', 'core.js', 'engine.js', 'bridge.js']) {
   const contents = await readFile(new URL(`../web/${source}`, import.meta.url), 'utf8');
   assert.ok(contents.length > 50, `${source} exists`);

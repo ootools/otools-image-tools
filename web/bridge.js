@@ -37,13 +37,21 @@ function nativeInvoke() {
   }
   return null;
 }
-function wrapper() {
+/**
+ * 统一的宿主 API 选择器。优先官方注入的 `window.otools`（含 apiVersion / pickFiles 等），
+ * 兼容旧版注入对象（dialog + readHostFile）。所有文件交互都从这里取，避免裸调底层命令时
+ * 传错参数类型（如把布尔值塞进 Rust 期望字符串的起始目录字段）。
+ */
+function hostApi() {
   for (const view of contexts()) {
-    try { const api = view.otools || view.utools; if (api?.dialog && typeof api.readHostFile === 'function') return api; } catch { /* cross-origin parent */ }
+    try {
+      const api = view.otools || view.utools;
+      if (api && (typeof api.pickFiles === 'function' || (api.dialog && typeof api.readHostFile === 'function'))) return api;
+    } catch { /* cross-origin parent */ }
   }
   return null;
 }
-export const hostAvailable = () => !!nativeInvoke() || !!wrapper();
+export const hostAvailable = () => !!nativeInvoke() || !!hostApi();
 async function invoke(command, params) {
   const fn = nativeInvoke();
   if (!fn) throw new Error('此功能需要在 OTools 桌面端打开插件');
@@ -56,26 +64,35 @@ function toBase64(bytes) {
   return btoa(binary);
 }
 const pathOf = (raw) => typeof raw === 'string' ? raw : raw?.path || null;
+const pathList = (value) => (Array.isArray(value) ? value : value ? [value] : []).map(pathOf).filter(Boolean);
 export async function pickImages() {
-  const options = { title: '打开图片', multiple: true, directory: false, filters: [{ name: '图片', extensions: IMAGE_EXTENSIONS }] };
-  const api = wrapper();
-  const result = api ? await api.dialog.open(options) : await invoke('tools_webview_pick_files', { options });
-  return (Array.isArray(result) ? result : result ? [result] : []).map(normalizeMeta).filter((item) => item.path);
+  const api = hostApi();
+  const options = { title: '打开图片', multiple: true, filters: [{ name: '图片', extensions: IMAGE_EXTENSIONS }] };
+  let paths;
+  if (api && typeof api.pickFiles === 'function') paths = pathList(await api.pickFiles(options));
+  else if (api?.dialog) paths = pathList(await api.dialog.open(options));
+  else paths = pathList(await invoke('tools_webview_pick_files', { options }));
+  return paths.map((path) => normalizeMeta({ path }));
 }
 export async function pickFolder(title = '选择图片文件夹') {
-  const api = wrapper();
-  const result = api ? await api.dialog.open({ title, directory: true, multiple: false }) : await invoke('tools_webview_pick_folder', { options: { title } });
-  const path = pathOf(Array.isArray(result) ? result[0] : result);
+  const api = hostApi();
+  let raw;
+  if (api && typeof api.pickDirectory === 'function') raw = await api.pickDirectory({ title });
+  else if (api?.dialog) raw = await api.dialog.open({ title, directory: true, multiple: false });
+  else raw = await invoke('tools_webview_pick_folder', { options: { title } });
+  const path = pathOf(Array.isArray(raw) ? raw[0] : raw);
   return path ? { path, name: baseName(path) || path } : null;
 }
 export async function listDirectory(path) {
   // Existing OTools list_dir returns one level only; no recursive scan.
-  const result = await invoke('tools_webview_list_dir', { path });
+  const api = hostApi();
+  const result = api && typeof api.listHostDir === 'function' ? await api.listHostDir(path) : await invoke('tools_webview_list_dir', { path });
   return (result || []).map(normalizeMeta);
 }
 export async function readBlob(item) {
   if (item.file) return item.file;
-  const api = wrapper(), data = api ? await api.readHostFile(item.path) : await invoke('tools_webview_read_file', { path: item.path });
+  const api = hostApi();
+  const data = api && typeof api.readHostFile === 'function' ? await api.readHostFile(item.path) : await invoke('tools_webview_read_file', { path: item.path });
   if (!data?.dataBase64) throw new Error('文件内容为空或不可读取');
   item.size = Number(data.size || item.size || 0);
   item.mime = mimeFor(item.name);
@@ -83,9 +100,12 @@ export async function readBlob(item) {
   return new Blob([bytesFromBase64(data.dataBase64)], { type: item.mime });
 }
 export async function chooseSavePath(name, ext) {
-  const api = wrapper();
+  const api = hostApi();
   const filters = [{ name: ext === 'pdf' ? 'PDF 文档' : '图片', extensions: [ext] }];
-  const raw = api ? await api.dialog.save({ title: '另存为', defaultPath: name, filters }) : await invoke('tools_webview_pick_save_path', { options: { title: '另存为', suggestedName: name, filters } });
+  let raw;
+  if (api && typeof api.saveFile === 'function') raw = await api.saveFile({ title: '另存为', defaultPath: name, filters });
+  else if (api?.dialog) raw = await api.dialog.save({ title: '另存为', defaultPath: name, filters });
+  else raw = await invoke('tools_webview_pick_save_path', { options: { title: '另存为', suggestedName: name, filters } });
   const path = pathOf(raw);
   if (!path) return null;
   const allowed = ext === 'jpg' ? ['jpg', 'jpeg', 'jfif'] : [ext];
@@ -94,7 +114,7 @@ export async function chooseSavePath(name, ext) {
 }
 export async function writeBlob(path, blob) {
   const request = { path, dataBase64: toBase64(new Uint8Array(await blob.arrayBuffer())) };
-  const api = wrapper();
+  const api = hostApi();
   if (api && typeof api.writeHostFile === 'function') return api.writeHostFile(request);
   return invoke('tools_webview_write_file', { request });
 }
