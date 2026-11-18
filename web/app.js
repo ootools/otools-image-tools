@@ -1,6 +1,6 @@
 import { buildPdf } from './core.js';
 import { decodeImage, defaultEdit, encodeCanvas, normalizeEdit, releaseCanvas, renderImage, resizeDimensions } from './engine.js';
-import { baseName, chooseSavePath, dirName, extension, hostAvailable, IMAGE_EXTENSIONS, isImage, joinPath, listDirectory, mimeFor, normalizeMeta, pathKey, pickFolder, pickImages, readBlob, writeBlob } from './bridge.js';
+import { baseName, chooseSavePath, dirName, extension, hostAvailable, IMAGE_EXTENSIONS, isImage, joinPath, listDirectory, mimeFor, normalizeMeta, onPanelImage, pathKey, pickFolder, pickImages, readBlob, writeBlob } from './bridge.js';
 
 const $ = (id) => document.getElementById(id);
 const state = {
@@ -480,5 +480,9 @@ $('stage').addEventListener('drop', (event) => {
 if (localStorage.getItem('image-tools-theme') === 'dark') document.documentElement.classList.add('dark');
 status(hostAvailable() ? '本地处理 · 原图安全保留' : '浏览器预览 · 可查看与下载副本；同目录浏览需在 OTools 使用');
 updateButtons();
+// PANEL 粘贴图片输入：宿主在用户点选本插件后派发 panel-image，收到即载入查看。
+void onPanelImage((meta) => {
+  void run(async () => { $('trayTitle').textContent = '粘贴的图片'; await setItems([meta]); })();
+});
 // Exposes only a readiness marker for automation, not mutable application state.
 document.documentElement.dataset.ready = 'true';

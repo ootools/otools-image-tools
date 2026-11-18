@@ -98,3 +98,46 @@ export async function writeBlob(path, blob) {
   if (api && typeof api.writeHostFile === 'function') return api.writeHostFile(request);
   return invoke('tools_webview_write_file', { request });
 }
+
+/** 宿主 PANEL 粘贴图片派发的关键词（见宿主 features/plugin-input/delivery.ts）。 */
+export const PANEL_IMAGE_KEYWORD = 'panel-image';
+
+/**
+ * 把宿主派发的图片载荷转成 setItems 可直接消费的条目。
+ * image: { dataUrl, mimeType, name }；payload.dataUrl 形如 data:image/png;base64,xxx。
+ */
+export function imagePayloadToMeta(image) {
+  const dataUrl = String(image?.dataUrl || '');
+  const comma = dataUrl.indexOf(',');
+  if (comma < 0) throw new Error('粘贴的图片数据无效');
+  const bytes = bytesFromBase64(dataUrl.slice(comma + 1));
+  const mime = String(image?.mimeType || '').startsWith('image/') ? image.mimeType : dataUrl.slice(5, comma).split(';')[0];
+  const name = String(image?.name || '').trim() || `clipboard.${mime.split('/')[1] || 'png'}`;
+  const file = new File([bytes], name, { type: mime, lastModified: Date.now() });
+  return { file, name, mime, size: bytes.length, lastModified: file.lastModified };
+}
+
+/**
+ * 订阅宿主 PANEL 图片输入。无宿主 API（浏览器预览）时返回空清理函数，静默不可用。
+ * 收到 panel-image 派发时把图片交给 handler(meta, query)。返回 unlisten。
+ */
+export async function onPanelImage(handler) {
+  for (const view of contexts()) {
+    try {
+      const api = view.otools || view.utools;
+      if (api && typeof api.onOtoolsKeyword === 'function') {
+        return api.onOtoolsKeyword((items) => {
+          for (const item of items || []) {
+            if (String(item?.keyword || '').toLowerCase() !== PANEL_IMAGE_KEYWORD) continue;
+            const image = item.payload?.image;
+            if (!image?.dataUrl) continue;
+            let meta;
+            try { meta = imagePayloadToMeta(image); } catch { continue; }
+            handler(meta, String(item.payload?.query || ''));
+          }
+        });
+      }
+    } catch { /* cross-origin parent */ }
+  }
+  return () => {};
+}
